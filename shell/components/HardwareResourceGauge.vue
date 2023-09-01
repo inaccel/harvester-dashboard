@@ -52,7 +52,7 @@ export default {
 
     percentage(resource) {
       if (resource.total === 0) {
-        return 0;
+        return '';
       }
 
       return `${ (resource.useful / resource.total * 100).toFixed(2) }%`;

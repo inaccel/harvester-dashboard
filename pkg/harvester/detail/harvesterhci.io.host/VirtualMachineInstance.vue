@@ -69,6 +69,14 @@ export default {
           width:     120
         },
         {
+          name:      'vmFPGA',
+          labelKey:  'tableHeaders.fpga',
+          sort:      'vmFPGA',
+          search:    false,
+          value:     'displayFpga',
+          width:     120
+        },
+        {
           name:      'vmRAM',
           labelKey:  'glance.memory',
           sort:      'vmRAM',

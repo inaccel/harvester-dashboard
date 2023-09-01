@@ -169,6 +169,8 @@ harvester:
       cpu: CPU
       memory: 内存
       storage: 存储
+      intelPacA10: Intel PAC A10
+      intelPacS10: Intel PAC S10
     sections:
       events:
         label: 事件

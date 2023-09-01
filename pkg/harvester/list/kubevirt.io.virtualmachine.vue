@@ -82,6 +82,14 @@ export default {
           dashIfEmpty: true,
         },
         {
+          name:        'FPGA',
+          label:       'FPGA',
+          sort:        ['displayFpga'],
+          value:       'displayFpga',
+          align:       'center',
+          dashIfEmpty: true,
+        },
+        {
           name:          'Memory',
           value:         'displayMemory',
           sort:          ['memorySort'],

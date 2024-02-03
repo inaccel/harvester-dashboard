@@ -96,7 +96,28 @@ export default {
     flavor() {
       const domain = this.value?.spec?.template?.spec?.domain;
 
-      return `${ domain.cpu?.cores } vCPU , ${ domain.resources?.limits?.memory } ${ this.t('harvester.virtualMachine.input.memory') }`;
+      let intelPacA10 = 0;
+      let intelPacS10 = 0;
+
+      domain.devices?.hostDevices?.forEach((hostDevice) => {
+        if (hostDevice.deviceName === 'intel/pac_a10') {
+          intelPacA10++;
+        }
+        if (hostDevice.deviceName === 'intel/pac_s10') {
+          intelPacS10++;
+        }
+      });
+
+      let fpga = '';
+
+      if (intelPacA10 > 0) {
+        fpga += `, ${ intelPacA10 } ${ this.t('harvester.dashboard.hardwareResourceGauge.intelPacA10') } `;
+      }
+      if (intelPacS10 > 0) {
+        fpga += `, ${ intelPacS10 } ${ this.t('harvester.dashboard.hardwareResourceGauge.intelPacS10') } `;
+      }
+
+      return `${ domain.cpu?.cores } vCPU ${ fpga }, ${ domain.resources?.limits?.memory } ${ this.t('harvester.virtualMachine.input.memory') }`;
     },
 
     kernelRelease() {

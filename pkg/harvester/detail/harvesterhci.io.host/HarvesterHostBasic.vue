@@ -5,6 +5,7 @@ import { HCI as HCI_ANNOTATIONS } from '@pkg/harvester/config/labels-annotations
 import { LONGHORN, METRIC } from '@shell/config/types';
 import { Banner } from '@components/Banner';
 import HarvesterCPUUsed from '../../formatters/HarvesterCPUUsed';
+import HarvesterFPGAUsed from '../../formatters/HarvesterFPGAUsed';
 import HarvesterMemoryUsed from '../../formatters/HarvesterMemoryUsed';
 import HarvesterStorageUsed from '../../formatters/HarvesterStorageUsed';
 
@@ -20,6 +21,7 @@ export default {
     Banner,
     LabelValue,
     HarvesterCPUUsed,
+    HarvesterFPGAUsed,
     HarvesterMemoryUsed,
     HarvesterStorageUsed,
   },
@@ -116,6 +118,18 @@ export default {
       const exponent = exponentNeeded(this.memoryTotal, 1024);
 
       return `${ UNITS[exponent] }iB`;
+    },
+
+    intelPacA10Capacity() {
+      return Number.parseInt(this.value.status.capacity['intel/pac_a10'] || '0');
+    },
+
+    intelPacS10Capacity() {
+      return Number.parseInt(this.value.status.capacity['intel/pac_s10'] || '0');
+    },
+
+    fpgaCapacity() {
+      return this.intelPacA10Capacity + this.intelPacS10Capacity;
     },
 
     nodeType() {
@@ -257,6 +271,30 @@ export default {
           <HarvesterStorageUsed
             :row="value"
             :resource-name="t('harvester.host.detail.storage')"
+            :show-reserved="true"
+          />
+        </div>
+      </div>
+      <div v-if="fpgaCapacity" class="row mb-20">
+        <div
+          v-if="intelPacA10Capacity"
+          class="col span-4"
+        >
+          <HarvesterFPGAUsed
+            :row="value"
+            :resource-name="t('node.detail.glance.consumptionGauge.intelPacA10')"
+            :intel-pac-a10-only="true"
+            :show-reserved="true"
+          />
+        </div>
+        <div
+          v-if="intelPacS10Capacity"
+          class="col span-4"
+        >
+          <HarvesterFPGAUsed
+            :row="value"
+            :resource-name="t('node.detail.glance.consumptionGauge.intelPacS10')"
+            :intel-pac-s10-only="true"
             :show-reserved="true"
           />
         </div>

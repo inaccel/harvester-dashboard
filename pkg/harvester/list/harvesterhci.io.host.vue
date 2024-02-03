@@ -96,6 +96,13 @@ export default {
             formatterOpts: { showUsed: true },
           },
           {
+            name:          'fpga',
+            labelKey:      'node.detail.glance.consumptionGauge.fpga',
+            value:         'id',
+            formatter:     'HarvesterFPGAUsed',
+            formatterOpts: { showReserved: true },
+          },
+          {
             name:          'memory',
             labelKey:      'node.detail.glance.consumptionGauge.memory',
             value:         'id',

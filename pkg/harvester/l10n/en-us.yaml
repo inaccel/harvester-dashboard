@@ -291,6 +291,8 @@ harvester:
       cpu: CPU
       memory: Memory
       storage: Storage
+      bittwareIa420f: BittWare IA-420F
+      bittwareIa840f: BittWare IA-840F
       intelPacA10: Intel PAC A10
       intelPacS10: Intel PAC S10
     sections:

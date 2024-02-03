@@ -499,6 +499,92 @@ export default {
       return createMemoryValues(this.memoryTotal, this.metricAggregations?.memory);
     },
 
+    bittwareIa420fUsage() {
+      return this.pods.filter(pod => pod.status.phase !== 'Succeeded' && pod.status.phase !== 'Failed').map((pod) => {
+        let limit = 0;
+
+        pod.spec.containers?.forEach((container) => {
+          const quantity = Number.parseInt(container.resources?.limits?.['bittware/ia420f'] || '0');
+
+          limit += quantity;
+        });
+        pod.spec.initContainers?.forEach((container) => {
+          const quantity = Number.parseInt(container.resources?.limits?.['bittware/ia420f'] || '0');
+
+          if (quantity > limit) {
+            limit = quantity;
+          }
+        });
+
+        return limit;
+      }).reduce((usage, limit) => usage + limit, 0.0);
+    },
+
+    bittwareIa420fAllocatable() {
+      return this.nodes.map(node => Number.parseInt(node.status.allocatable['bittware/ia420f'] || '0')).reduce((allocatable, nodeAllocatable) => allocatable + nodeAllocatable, 0);
+    },
+
+    bittwareIa420fCapacity() {
+      return this.nodes.map(node => Number.parseInt(node.status.capacity['bittware/ia420f'] || '0')).reduce((capacity, nodeCapacity) => capacity + nodeCapacity, 0);
+    },
+
+    bittwareIa420fReserved() {
+      return {
+        total:  this.bittwareIa420fCapacity,
+        useful: this.bittwareIa420fAllocatable
+      };
+    },
+
+    bittwareIa420fUsed() {
+      return {
+        total:  this.bittwareIa420fCapacity,
+        useful: this.bittwareIa420fUsage
+      };
+    },
+
+    bittwareIa840fUsage() {
+      return this.pods.filter(pod => pod.status.phase !== 'Succeeded' && pod.status.phase !== 'Failed').map((pod) => {
+        let limit = 0;
+
+        pod.spec.containers?.forEach((container) => {
+          const quantity = Number.parseInt(container.resources?.limits?.['bittware/ia840f'] || '0');
+
+          limit += quantity;
+        });
+        pod.spec.initContainers?.forEach((container) => {
+          const quantity = Number.parseInt(container.resources?.limits?.['bittware/ia840f'] || '0');
+
+          if (quantity > limit) {
+            limit = quantity;
+          }
+        });
+
+        return limit;
+      }).reduce((usage, limit) => usage + limit, 0.0);
+    },
+
+    bittwareIa840fAllocatable() {
+      return this.nodes.map(node => Number.parseInt(node.status.allocatable['bittware/ia840f'] || '0')).reduce((allocatable, nodeAllocatable) => allocatable + nodeAllocatable, 0);
+    },
+
+    bittwareIa840fCapacity() {
+      return this.nodes.map(node => Number.parseInt(node.status.capacity['bittware/ia840f'] || '0')).reduce((capacity, nodeCapacity) => capacity + nodeCapacity, 0);
+    },
+
+    bittwareIa840fReserved() {
+      return {
+        total:  this.bittwareIa840fCapacity,
+        useful: this.bittwareIa840fAllocatable
+      };
+    },
+
+    bittwareIa840fUsed() {
+      return {
+        total:  this.bittwareIa840fCapacity,
+        useful: this.bittwareIa840fUsage
+      };
+    },
+
     intelPacA10Usage() {
       return this.pods.filter(pod => pod.status.phase !== 'Succeeded' && pod.status.phase !== 'Failed').map((pod) => {
         let limit = 0;
@@ -586,7 +672,7 @@ export default {
     },
 
     fpgaCapacity() {
-      return this.intelPacA10Capacity + this.intelPacS10Capacity;
+      return this.bittwareIa420fCapacity + this.bittwareIa840fCapacity + this.intelPacA10Capacity + this.intelPacS10Capacity;
     },
 
     hasMetricNodeSchema() {
@@ -765,6 +851,18 @@ export default {
       <div
         class="hardware-resource-gauges"
       >
+        <HardwareResourceGauge
+          v-if="bittwareIa420fCapacity"
+          :name="t('harvester.dashboard.hardwareResourceGauge.bittwareIa420f')"
+          :reserved="bittwareIa420fReserved"
+          :used="bittwareIa420fUsed"
+        />
+        <HardwareResourceGauge
+          v-if="bittwareIa840fCapacity"
+          :name="t('harvester.dashboard.hardwareResourceGauge.bittwareIa840f')"
+          :reserved="bittwareIa840fReserved"
+          :used="bittwareIa840fUsed"
+        />
         <HardwareResourceGauge
           v-if="intelPacA10Capacity"
           :name="t('harvester.dashboard.hardwareResourceGauge.intelPacA10')"

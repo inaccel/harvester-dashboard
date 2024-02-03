@@ -1005,6 +1005,12 @@ export default class VirtVm extends HarvesterResource {
     let fpga = 0;
 
     this.spec.template.spec.domain.devices?.hostDevices?.forEach((hostDevice) => {
+      if (hostDevice.deviceName === 'bittware/ia420f') {
+        fpga++;
+      }
+      if (hostDevice.deviceName === 'bittware/ia840f') {
+        fpga++;
+      }
       if (hostDevice.deviceName === 'intel/pac_a10') {
         fpga++;
       }

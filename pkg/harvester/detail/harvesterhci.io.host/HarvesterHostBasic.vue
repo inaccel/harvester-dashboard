@@ -120,6 +120,14 @@ export default {
       return `${ UNITS[exponent] }iB`;
     },
 
+    bittwareIa420fCapacity() {
+      return Number.parseInt(this.value.status.capacity['bittware/ia420f'] || '0');
+    },
+
+    bittwareIa840fCapacity() {
+      return Number.parseInt(this.value.status.capacity['bittware/ia840f'] || '0');
+    },
+
     intelPacA10Capacity() {
       return Number.parseInt(this.value.status.capacity['intel/pac_a10'] || '0');
     },
@@ -129,7 +137,7 @@ export default {
     },
 
     fpgaCapacity() {
-      return this.intelPacA10Capacity + this.intelPacS10Capacity;
+      return this.bittwareIa420fCapacity + this.bittwareIa840fCapacity + this.intelPacA10Capacity + this.intelPacS10Capacity;
     },
 
     nodeType() {
@@ -277,12 +285,34 @@ export default {
       </div>
       <div v-if="fpgaCapacity" class="row mb-20">
         <div
+          v-if="bittwareIa420fCapacity"
+          class="col span-4"
+        >
+          <HarvesterFPGAUsed
+            :row="value"
+            :resource-name="t('harvester.dashboard.hardwareResourceGauge.bittwareIa420f')"
+            :bittware-ia420f-only="true"
+            :show-reserved="true"
+          />
+        </div>
+        <div
+          v-if="bittwareIa840fCapacity"
+          class="col span-4"
+        >
+          <HarvesterFPGAUsed
+            :row="value"
+            :resource-name="t('harvester.dashboard.hardwareResourceGauge.bittwareIa840f')"
+            :bittware-ia840f-only="true"
+            :show-reserved="true"
+          />
+        </div>
+        <div
           v-if="intelPacA10Capacity"
           class="col span-4"
         >
           <HarvesterFPGAUsed
             :row="value"
-            :resource-name="t('node.detail.glance.consumptionGauge.intelPacA10')"
+            :resource-name="t('harvester.dashboard.hardwareResourceGauge.intelPacA10')"
             :intel-pac-a10-only="true"
             :show-reserved="true"
           />
@@ -293,7 +323,7 @@ export default {
         >
           <HarvesterFPGAUsed
             :row="value"
-            :resource-name="t('node.detail.glance.consumptionGauge.intelPacS10')"
+            :resource-name="t('harvester.dashboard.hardwareResourceGauge.intelPacS10')"
             :intel-pac-s10-only="true"
             :show-reserved="true"
           />

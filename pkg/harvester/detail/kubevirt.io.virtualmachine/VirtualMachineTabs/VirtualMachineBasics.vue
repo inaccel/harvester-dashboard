@@ -96,10 +96,18 @@ export default {
     flavor() {
       const domain = this.value?.spec?.template?.spec?.domain;
 
+      let bittwareIa420f = 0;
+      let bittwareIa840f = 0;
       let intelPacA10 = 0;
       let intelPacS10 = 0;
 
       domain.devices?.hostDevices?.forEach((hostDevice) => {
+        if (hostDevice.deviceName === 'bittware/ia420f') {
+          bittwareIa420f++;
+        }
+        if (hostDevice.deviceName === 'bittware/ia840f') {
+          bittwareIa840f++;
+        }
         if (hostDevice.deviceName === 'intel/pac_a10') {
           intelPacA10++;
         }
@@ -110,6 +118,12 @@ export default {
 
       let fpga = '';
 
+      if (bittwareIa420f > 0) {
+        fpga += `, ${ bittwareIa420f } ${ this.t('harvester.dashboard.hardwareResourceGauge.bittwareIa420f') } `;
+      }
+      if (bittwareIa840f > 0) {
+        fpga += `, ${ bittwareIa840f } ${ this.t('harvester.dashboard.hardwareResourceGauge.bittwareIa840f') } `;
+      }
       if (intelPacA10 > 0) {
         fpga += `, ${ intelPacA10 } ${ this.t('harvester.dashboard.hardwareResourceGauge.intelPacA10') } `;
       }

@@ -84,6 +84,10 @@ export default {
       };
     },
     formattedPercentage() {
+      if (!this.capacity) {
+        return '-%';
+      }
+
       return formatPercent(this.percentageBarValue);
     }
   }

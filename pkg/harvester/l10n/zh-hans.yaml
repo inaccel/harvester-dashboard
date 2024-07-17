@@ -564,6 +564,10 @@ harvester:
       duplicatedUser: 用户已存在。
       invalidUser: 无效的用户名
     input:
+      bittwareIa420f: BittWare IA-420F
+      bittwareIa840f: BittWare IA-840F
+      intelPacA10: Intel PAC A10
+      intelPacS10: Intel PAC S10
       name: 名称
       memory: 内存
       image: 镜像

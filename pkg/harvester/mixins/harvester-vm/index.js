@@ -164,6 +164,10 @@ export default {
       enabledSriovgpu:               false,
       immutableMode:                 this.realMode === _CREATE ? _CREATE : _VIEW,
       terminationGracePeriodSeconds: '',
+      bittwareIa420f:                null,
+      bittwareIa840f:                null,
+      intelPacA10:                   null,
+      intelPacS10:                   null,
     };
   },
 
@@ -347,6 +351,7 @@ export default {
 
       userData = this.isCreate && !existUserData && !this.isClone ? this.getInitUserData({ osType }) : userData;
 
+      const inaccel = this.hasInAccel(userData, {});
       const installUSBTablet = this.isInstallUSBTablet(spec);
       const installAgent = this.hasInstallAgent(userData, osType, true);
       const efiEnabled = this.isEfiEnabled(spec);
@@ -377,6 +382,11 @@ export default {
       this.$set(this, 'reservedMemory', reservedMemory);
       this.$set(this, 'machineType', machineType);
       this.$set(this, 'terminationGracePeriodSeconds', terminationGracePeriodSeconds);
+
+      this.$set(this, 'bittwareIa420f', inaccel['bittware/ia420f']);
+      this.$set(this, 'bittwareIa840f', inaccel['bittware/ia840f']);
+      this.$set(this, 'intelPacA10', inaccel['intel/pac_a10']);
+      this.$set(this, 'intelPacS10', inaccel['intel/pac_s10']);
 
       this.$set(this, 'installUSBTablet', installUSBTablet);
       this.$set(this, 'efiEnabled', efiEnabled);
@@ -836,6 +846,37 @@ export default {
       try {
         // https://github.com/eemeli/yaml/issues/136
         let userDataDoc = this.userScript ? YAML.parseDocument(this.userScript) : YAML.parseDocument({});
+        const userDataYAML = userDataDoc.toString();
+        const userDataJSON = YAML.parse(userDataYAML);
+        let inaccel = userDataJSON?.inaccel || {};
+
+        if (!isEmpty(this.bittwareIa420f)) {
+          inaccel['bittware/ia420f'] = this.bittwareIa420f;
+        } else {
+          delete inaccel['bittware/ia420f'];
+        }
+        if (!isEmpty(this.bittwareIa840f)) {
+          inaccel['bittware/ia840f'] = this.bittwareIa840f;
+        } else {
+          delete inaccel['bittware/ia840f'];
+        }
+        if (!isEmpty(this.intelPacA10)) {
+          inaccel['intel/pac_a10'] = this.intelPacA10;
+        } else {
+          delete inaccel['intel/pac_a10'];
+        }
+        if (!isEmpty(this.intelPacS10)) {
+          inaccel['intel/pac_s10'] = this.intelPacS10;
+        } else {
+          delete inaccel['intel/pac_s10'];
+        }
+
+        if (!isEmpty(inaccel)) {
+          userDataDoc.setIn(['inaccel'], inaccel);
+        } else {
+          userDataDoc.setIn(['inaccel'], {}); // It needs to be set empty first, as it is possible that cloud-init comments are mounted on this node
+          this.deleteYamlDocProp(userDataDoc, ['inaccel']);
+        }
 
         const allSSHAuthorizedKeys = this.mergeSSHAuthorizedKeys(this.userScript);
 
@@ -868,6 +909,18 @@ export default {
     updateCpuMemory(cpu, memory) {
       this.$set(this, 'cpu', cpu);
       this.$set(this, 'memory', memory);
+    },
+
+    updateFpga(bittwareIa420f, bittwareIa840f, intelPacA10, intelPacS10) {
+      this.$set(this, 'bittwareIa420f', bittwareIa420f);
+      this.$set(this, 'bittwareIa840f', bittwareIa840f);
+      this.$set(this, 'intelPacA10', intelPacA10);
+      this.$set(this, 'intelPacS10', intelPacS10);
+
+      const out = this.getUserData({ deletePackage: this.deletePackage, installAgent: this.installAgent, osType: this.osType });
+
+      this.$set(this, 'userScript', out);
+      this.refreshYamlEditor();
     },
 
     parseDisk(R, index) {

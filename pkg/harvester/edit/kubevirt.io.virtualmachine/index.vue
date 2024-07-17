@@ -18,6 +18,7 @@ import SSHKey from './VirtualMachineSSHKey';
 import Volume from './VirtualMachineVolume';
 import Network from './VirtualMachineNetwork';
 import CpuMemory from './VirtualMachineCpuMemory';
+import Fpga from './VirtualMachineFpga';
 import CloudConfig from './VirtualMachineCloudConfig';
 import NodeScheduling from '@shell/components/form/NodeScheduling';
 import PodAffinity from '@shell/components/form/PodAffinity';
@@ -57,6 +58,7 @@ export default {
     SSHKey,
     Network,
     CpuMemory,
+    Fpga,
     CloudConfig,
     NodeScheduling,
     PodAffinity,
@@ -512,6 +514,15 @@ export default {
           :memory="memory"
           :mode="mode"
           @updateCpuMemory="updateCpuMemory"
+        />
+
+        <Fpga
+          :bittware-ia420f="bittwareIa420f"
+          :bittware-ia840f="bittwareIa840f"
+          :intel-pac-a10="intelPacA10"
+          :intel-pac-s10="intelPacS10"
+          :mode="mode"
+          @updateFpga="updateFpga"
         />
 
         <SSHKey

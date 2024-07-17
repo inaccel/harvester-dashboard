@@ -569,6 +569,10 @@ harvester:
       duplicatedUser: User already exist.
       invalidUser: Invalid Username.
     input:
+      bittwareIa420f: BittWare IA-420F
+      bittwareIa840f: BittWare IA-840F
+      intelPacA10: Intel PAC A10
+      intelPacS10: Intel PAC S10
       name: Name
       memory: Memory
       image: Image

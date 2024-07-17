@@ -105,6 +105,20 @@ export default {
       return _QGA_JSON.runcmd[0];
     },
 
+    hasInAccel(userScript, oldValue) {
+      let dataFormat = {};
+
+      try {
+        dataFormat = jsyaml.load(userScript) || {};
+      } catch (e) {
+        new Error('Function(hasInAccel) error');
+
+        return oldValue;
+      }
+
+      return dataFormat?.inaccel || {};
+    },
+
     hasInstallAgent(userScript, osType, oldValue) {
       let dataFormat = {};
       const _QGA_JSON = this.getMatchQGA(osType);

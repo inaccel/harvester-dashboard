@@ -10,6 +10,7 @@ import { allHash } from '@shell/utils/promise';
 import CreateEditView from '@shell/mixins/create-edit-view';
 import { HCI } from '../../types';
 import CpuMemory from '../../edit/kubevirt.io.virtualmachine/VirtualMachineCpuMemory';
+import Fpga from '../../edit/kubevirt.io.virtualmachine/VirtualMachineFpga';
 
 import OverviewKeypairs from '../kubevirt.io.virtualmachine/VirtualMachineTabs/VirtualMachineKeypairs';
 import Volume from '../../edit/kubevirt.io.virtualmachine/VirtualMachineVolume';
@@ -31,6 +32,7 @@ export default {
     CloudConfig,
     Checkbox,
     CpuMemory,
+    Fpga,
     OverviewKeypairs,
   },
 
@@ -147,6 +149,8 @@ export default {
         </div>
 
         <CpuMemory :cpu="cpu" :mode="mode" :memory="memory" />
+
+        <Fpga :bittware-ia420f="bittwareIa420f" :bittware-ia840f="bittwareIa840f" :intel-pac-a10="intelPacA10" :intel-pac-s10="intelPacS10" :mode="mode" />
 
         <div class="row">
           <div class="col span-6">

@@ -96,7 +96,42 @@ export default {
     flavor() {
       const domain = this.value?.spec?.template?.spec?.domain;
 
-      return `${ domain.cpu?.cores } vCPU , ${ domain.resources?.limits?.memory } ${ this.t('harvester.virtualMachine.input.memory') }`;
+      let bittwareIa420f = 0;
+      let bittwareIa840f = 0;
+      let intelPacA10 = 0;
+      let intelPacS10 = 0;
+
+      domain.devices?.hostDevices?.forEach((hostDevice) => {
+        if (hostDevice.deviceName === 'bittware/ia420f') {
+          bittwareIa420f++;
+        }
+        if (hostDevice.deviceName === 'bittware/ia840f') {
+          bittwareIa840f++;
+        }
+        if (hostDevice.deviceName === 'intel/pac_a10') {
+          intelPacA10++;
+        }
+        if (hostDevice.deviceName === 'intel/pac_s10') {
+          intelPacS10++;
+        }
+      });
+
+      let fpga = '';
+
+      if (bittwareIa420f > 0) {
+        fpga += `, ${ bittwareIa420f } ${ this.t('harvester.dashboard.hardwareResourceGauge.bittwareIa420f') } `;
+      }
+      if (bittwareIa840f > 0) {
+        fpga += `, ${ bittwareIa840f } ${ this.t('harvester.dashboard.hardwareResourceGauge.bittwareIa840f') } `;
+      }
+      if (intelPacA10 > 0) {
+        fpga += `, ${ intelPacA10 } ${ this.t('harvester.dashboard.hardwareResourceGauge.intelPacA10') } `;
+      }
+      if (intelPacS10 > 0) {
+        fpga += `, ${ intelPacS10 } ${ this.t('harvester.dashboard.hardwareResourceGauge.intelPacS10') } `;
+      }
+
+      return `${ domain.cpu?.cores } vCPU ${ fpga }, ${ domain.resources?.limits?.memory } ${ this.t('harvester.virtualMachine.input.memory') }`;
     },
 
     kernelRelease() {

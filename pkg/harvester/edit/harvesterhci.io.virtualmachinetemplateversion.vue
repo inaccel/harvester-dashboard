@@ -16,6 +16,7 @@ import Reserved from './kubevirt.io.virtualmachine/VirtualMachineReserved';
 import Volume from './kubevirt.io.virtualmachine/VirtualMachineVolume';
 import Network from './kubevirt.io.virtualmachine/VirtualMachineNetwork';
 import CpuMemory from './kubevirt.io.virtualmachine/VirtualMachineCpuMemory';
+import Fpga from './kubevirt.io.virtualmachine/VirtualMachineFpga';
 import CloudConfig from './kubevirt.io.virtualmachine/VirtualMachineCloudConfig';
 import SSHKey from './kubevirt.io.virtualmachine/VirtualMachineSSHKey';
 
@@ -40,6 +41,7 @@ export default {
     Network,
     Checkbox,
     CpuMemory,
+    Fpga,
     CruResource,
     CloudConfig,
     LabeledSelect,
@@ -240,6 +242,8 @@ export default {
     <Tabbed :side-tabs="true" @changed="onTabChanged">
       <Tab name="Basics" :label="t('harvester.vmTemplate.tabs.basics')">
         <CpuMemory :cpu="cpu" :memory="memory" :disabled="isConfig" @updateCpuMemory="updateCpuMemory" />
+
+        <Fpga :bittware-ia420f="bittwareIa420f" :bittware-ia840f="bittwareIa840f" :intel-pac-a10="intelPacA10" :intel-pac-s10="intelPacS10" :disabled="isConfig" @updateFpga="updateFpga" />
 
         <div class="mb-20">
           <SSHKey
